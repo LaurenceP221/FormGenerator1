@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-// Check if prompts are available in the session
-if (!isset($_SESSION['prompts'])) {
+// Check if title and prompts are available in the session
+if (!isset($_SESSION['title']) || !isset($_SESSION['prompts'])) {
     header("Location: index.php");
     exit();
 }
@@ -15,10 +15,14 @@ $prompts = explode(',', $_SESSION['prompts']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompts</title>
+    <title>Preview Form</title>
 </head>
 <body>
-    <h1>Prompts</h1>
+    <!-- Display form title -->
+    <h1>Title: <?php echo htmlspecialchars($_SESSION['title']); ?></h1>
+
+    <!-- Display form prompts -->
+    <h2>Prompts</h2>
     <ul>
         <?php foreach ($prompts as $prompt): ?>
             <li><?php echo htmlspecialchars(trim($prompt)); ?></li>
