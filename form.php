@@ -17,6 +17,29 @@ $prompts = explode(',', $_SESSION['prompts']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($_SESSION['title']); ?></title>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <script type="text/javascript" src="js/jquery.signature.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/jquery.signature.css">
+
+    <style>
+        .kbw-signature {
+            width: 400px;
+            height: 200px;
+        }
+
+        #sig canvas {
+            width: 100% !important;
+            height: auto;
+        }
+        
+        hr.dotted {
+            border-top: 3px dotted #bbb;
+            }
+    </style>
 </head>
 <body>
     <!-- Display form title -->
@@ -31,7 +54,24 @@ $prompts = explode(',', $_SESSION['prompts']);
             <input type="text" id="<?php echo strtolower(str_replace(' ', '_', trim($prompt))); ?>"
              name="<?php echo strtolower(str_replace(' ', '_', trim($prompt))); ?>"><br><br>
         <?php endforeach; ?>
+
+        <div class="">
+            <label class="" for="">Signature:  </label>
+            <br />
+            <div class="container-fluid" id="sig"></div>
+            <br />
+
+            <textarea id="signature64" name="signature" style="display: none" required></textarea>
+            <div class="col-sm-12">
+                <button class="btn btn-lg btn-warning" id="clear">&#x232B; Clear Signature</button>
+            </div>
+            <div class="invalid-feedback">
+                Please put your signature.
+            </div>
+        </div>
+
         <button type="submit">Submit</button>
     </form>
+    <script src="js\script.js"></script>
 </body>
 </html>

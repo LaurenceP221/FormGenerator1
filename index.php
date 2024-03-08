@@ -25,7 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <!-- Input form title -->
         <label for="title">Enter form title:</label><br>
-        <input type="text" id="title" name="title" pattern="[^\d]\S*" required title="Title cannot start with a number"><br><br>
+        <input type="text" id="title" name="title" pattern="[^\d]\S*" required 
+        title="Title cannot start with a number"><br><br>
 
         <!-- Input prompts -->
         <label for="prompts">Enter prompts separated by commas:</label><br>
@@ -34,3 +35,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 </body>
 </html>
+
