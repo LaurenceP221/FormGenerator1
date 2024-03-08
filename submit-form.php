@@ -16,7 +16,6 @@ include("conn.php");
 //Declare variables from the form data
 foreach($promptArray as $key => $prompt) {
     $columnName = strtolower(str_replace(' ', '_', trim($prompt)));
-    // ${$columnName} is a variable variable, it allows to create variables dynamically
     $varName = $columnName;
     $$varName = mysqli_real_escape_string($conn, $_POST[$columnName]);
     echo "The value of $varName is: " . $$varName . "<br>";
@@ -35,6 +34,7 @@ foreach($promptArray as $key => $prompt) {
     $columnName = strtolower(str_replace(' ', '_', trim($prompt)));
     $sql .= "$columnName VARCHAR(255) NULL,";
 }
+//remove last comma
 $sql = rtrim($sql, ','). ")";
 
 //Error trap the table creation
@@ -66,7 +66,6 @@ foreach($promptArray as $key => $x) {
 }
 $insertSql .= ")";
 
-
 echo"<br>";
 echo $insertSql;
 echo"<br>";
@@ -83,5 +82,5 @@ if ($conn->query($insertSql) === FALSE) {
     foreach($promptArray as $x) {
         $columnName = strtolower(str_replace(' ', '_', trim($x)));
         echo"column value:$".$columnName;
-    }
+    };
 }
