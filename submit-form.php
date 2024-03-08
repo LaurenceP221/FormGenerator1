@@ -6,10 +6,23 @@ if (!isset($_SESSION['title']) || !isset($_SESSION['prompts'])) {
     header("Location: index.php");
     exit();
 }
+
 // Retrieve form prompts and store them in an array
 $prompts = explode(',', $_SESSION['prompts']);
 
+// Connect to database
 include("conn.php");
+
+//Declare variables from the form data
+foreach($prompts as $key => $prompt) {
+    $columnName = strtolower(str_replace(' ', '_', trim($prompt)));
+    // ${$columnName} is a variable variable, it allows to create variables dynamically
+    $varName = $columnName;
+    $$varName = mysqli_real_escape_string($conn, $_POST[$columnName]);
+    echo "The value of $varName is: " . $$varName . "<br>";
+    echo "$$varName = mysqli_real_escape_string(, $_POST[$columnName]);". "<br>";
+
+}
 
 //Check connection
 if ($conn->connect_error) {
@@ -21,34 +34,55 @@ $tableName = strtolower(str_replace(' ', '_', trim($_SESSION['title'])));
 $sql = "CREATE TABLE IF NOT EXISTS $tableName (id INT(6) AUTO_INCREMENT PRIMARY KEY,";
 foreach($prompts as $key => $prompt) {
     $columnName = strtolower(str_replace(' ', '_', trim($prompt)));
-    $sql .= "$columnName VARCHAR(255) NOT NULL,";
+    $sql .= "$columnName VARCHAR(255) NULL,";
 }
 $sql = rtrim($sql, ','). ")";
 
 //Error trap the table creation
 if ($conn->query($sql) === FALSE) {
     echo "Error creating table: " . $conn->error;
+}else{
+    echo "<br>";
+    echo $sql;
 }
 
-// Insert data into table
+// Write SQL to insert data into table
 $insertSql = "INSERT INTO $tableName (";
-foreach($prompts as $key => $prompt) {
-    $columnName = strtolower(str_replace(' ', '_', trim($prompt)));
-    $insertSql .= "$columnName,";
+//loop through prompts and add to insert SQL
+foreach($prompts as $key => $x) {
+    $columnName = strtolower(str_replace(' ', '_', trim($x)));
+    $insertSql .= "$columnName";
+    if ($key < count($prompts) - 1) {
+        $insertSql .= ", ";
+    }
 }
-$insertSql = rtrim($insertSql, ',') . ") VALUES (";
-foreach($prompts as $key => $prompt) {
-    $columnName = strtolower(str_replace(' ', '_', trim($prompt)));
-    $insertSql .= "?,";
+$insertSql .= ") VALUES (";
+//loop through prompts and add to insert SQL values
+foreach($prompts as $key => $x) {
+    $columnName = strtolower(str_replace(' ', '_', trim($x)));
+    $insertSql .= "'".${$columnName}."'"; 
+    if ($key < count($prompts) - 1) {
+        $insertSql .= ", ";
+    }
 }
-$insertSql = rtrim($insertSql, ',') . ")";
+$insertSql .= ")";
 
-//Run the insert
-$stmt = $conn->prepare($insertSql);
-$postValues = array_values($_POST);
-$stmt->bind_param(str_repeat("s", count($prompts)), ...$postValues);
 
-// Close connection
-$conn->close();
-?>
+echo"<br>";
+echo $insertSql;
+echo"<br>";
 
+//Error trap the insert
+if ($conn->query($insertSql) === FALSE) {
+    echo "Error inserting data: ". $conn->error;
+}else{
+     foreach($prompts as $x) {
+        $columnName = strtolower(str_replace(' ', '_', trim($x)));
+       echo"column name:$columnName ";
+    };
+    echo "<br>";
+    foreach($prompts as $x) {
+        $columnName = strtolower(str_replace(' ', '_', trim($x)));
+        echo"column value:$".$columnName;
+    }
+}

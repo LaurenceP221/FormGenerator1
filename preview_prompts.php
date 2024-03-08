@@ -2,6 +2,7 @@
 session_start();
 
 // Check if title and prompts are available in the session
+// If not, redirect to index.php
 if (!isset($_SESSION['title']) || !isset($_SESSION['prompts'])) {
     header("Location: index.php");
     exit();
